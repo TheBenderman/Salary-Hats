@@ -1,0 +1,265 @@
+
+<!-- saved from url=(0080)file:///Users/nathanbender/Documents/Classes/CS%20338/Salary%20Hats/MLBTeam.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">		
+		<link rel="stylesheet" href="file:///Users/nathanbender/Documents/Classes/CS%20338/Salary%20Hats/bootstrap/bootstrap.min.css">
+		<link rel="stylesheet" href="file:///Users/nathanbender/Documents/Classes/CS%20338/Salary%20Hats/bootstrap/bootstrap-theme.css">
+		<link rel="stylesheet" href="file:///Users/nathanbender/Documents/Classes/CS%20338/Salary%20Hats/bootstrap3-dialog-master/src/css/bootstrap-dialog.css">
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="file:///Users/nathanbender/Documents/Classes/CS%20338/Salary%20Hats/sortable/css/sortable-theme-bootstrap.css">
+		
+		<script src="./MLBTeam_files/jquery.min.js"></script>
+		<script src="./MLBTeam_files/bootstrap.min.js"></script>
+		<script src="./MLBTeam_files/cloudmine-0.9.12.min.js"></script>
+		<script src="./MLBTeam_files/SalaryHats.js"></script>
+		<script src="./MLBTeam_files/bootstrap-dialog.js"></script>
+		<script src="./MLBTeam_files/sortable.js"></script>
+
+		<script type="text/javascript">
+			var id = sessionStorage.getItem("selectedTeam");
+			if(id == ""){
+				sessionStorage.setItem("ErrorMessage", "Error");
+				window.location.href = "MLB.html";
+			}
+
+			$(document).ready(function(){
+				$('#new-player-button').popover();
+				displayTeamHeader();
+				populatePlayerTable("MLB");
+
+				$("#help-button").on("click", function(){
+					BootstrapDialog.show({
+						message: 'Welcome to the help for an MLB Team. \n\n Here you can add new players, edit existing players, or delete players. \n\n You can click the pencil button next to a players name in order to edit that players information, such as name, position and salaries for each year. Finally, you can click the red x if you would like to delete that team. \n\n Click on one of the tables headers if you would like to sort the table by that specific column. \n\n\n A little information about the MLB\'s salary cap:\n\n The MLB has does not actually have a salary cap, but does have a luxury tax, which triggers for any amount over $178 million. The Payroll column of the table is the total amount of salary for the players for the current season. The Cap Space column of the table shows how much money is left for the team to spend.',
+						title: 'Help',
+						buttons: [{
+					        id: 'btn-ok',   
+					        icon: 'fa fa-check',       
+					    	label: 'OK',
+					        cssClass: 'btn-primary', 
+					        autospin: false,
+					        action: function(dialogRef){    
+					            dialogRef.close();
+					        }
+					    }]
+					});
+				});
+			});			
+			
+		</script>
+
+		<style>
+			th.pname {
+				width: 300px;
+			}
+			th.position {
+				width: 100px;
+			}
+			th.salary {
+				width: 100px;
+			}
+			td {
+				height: 40px;
+			}
+		</style>
+	</head>
+	<body class="" style="padding-right: 0px;">
+		<nav class="navbar navbar-default navbar-fixed-top">
+			<div class="container">
+				<div class="navbar-header">
+					<a class="navbar-brand">Salary Hats</a>
+				</div>
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-6">
+					<ul class="nav navbar-nav">
+						<li><a href="file:///Users/nathanbender/Documents/Classes/CS%20338/Salary%20Hats/Home.html">Home</a></li>
+						<li><a href="file:///Users/nathanbender/Documents/Classes/CS%20338/Salary%20Hats/NHL.html">NHL</a></li>
+						<li><a href="file:///Users/nathanbender/Documents/Classes/CS%20338/Salary%20Hats/NBA.html">NBA</a></li>
+						<li class="active"><a href="file:///Users/nathanbender/Documents/Classes/CS%20338/Salary%20Hats/MLB.html">MLB</a></li>
+						<li><a href="file:///Users/nathanbender/Documents/Classes/CS%20338/Salary%20Hats/NFL.html">NFL</a></li>
+						<li><a href="file:///Users/nathanbender/Documents/Classes/CS%20338/Salary%20Hats/MLS.html">MLS</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		
+		<div style="margin-top:80px; margin-left:15px">
+			<span id="team-header" style="font-size:30px">Philadelphia Phillies Salary Information</span> <i id="help-button" class="fa fa-question-circle fa-2x" style="margin-left:20px; color:blue"></i>
+		</div>
+		
+		<div style="margin-top:30px; margin-left:15px; width:1100">
+			<button id="new-player-button" rel="popover" type="button" class="btn btn-default" style="margin-bottom:5px" data-toggle="popover" data-placement="right" data-html="true" data-content="&lt;div&gt;
+						Please enter the data for the new player here. All input fields must be filled. The salary fields may
+						only be numbers. If there is no salary for a year, enter a 0.
+						&lt;br/&gt;
+						&lt;br/&gt;
+
+						&lt;div class=&quot;input-group&quot;&gt;
+							&lt;span class=&quot;input-group-addon&quot; style=&quot;width:105px&quot;&gt;Name&lt;/span&gt;
+							&lt;input id=&quot;name-input-field&quot; type=&quot;text&quot; class=&quot;form-control&quot; placeholder=&quot;Enter Name Here&quot; aria-describedby=&quot;basic-addon1&quot;&gt;
+						&lt;/div&gt;
+						
+						&lt;div class=&quot;input-group&quot;&gt;
+							&lt;span class=&quot;input-group-addon&quot; style=&quot;width:105px&quot;&gt;Position&lt;span class=&quot;caret&quot;&gt;&lt;/span&gt;&lt;/span&gt;
+							&lt;div class=&quot;dropdown&quot; id=&quot;position-input-field&quot;&gt;
+							  &lt;button class=&quot;btn btn-default dropdown-toggle&quot; type=&quot;button&quot; id=&quot;position-dropdown-button&quot; data-toggle=&quot;dropdown&quot; aria-expanded=&quot;true&quot; style=&quot;width:139px&quot;&gt;
+							    Pitcher
+							  &lt;/button&gt;
+							  &lt;ul class=&quot;dropdown-menu&quot; role=&quot;menu&quot; aria-labelledby=&quot;dropdownMenu1&quot;&gt;
+							    &lt;li role=&quot;presentation&quot;&gt;&lt;a role=&quot;menuitem&quot; tabindex=&quot;-1&quot; href=&quot;#&quot;&gt;Pitcher&lt;/a&gt;&lt;/li&gt;
+							    &lt;li role=&quot;presentation&quot;&gt;&lt;a role=&quot;menuitem&quot; tabindex=&quot;-1&quot; href=&quot;#&quot;&gt;Catcher&lt;/a&gt;&lt;/li&gt;
+							    &lt;li role=&quot;presentation&quot;&gt;&lt;a role=&quot;menuitem&quot; tabindex=&quot;-1&quot; href=&quot;#&quot;&gt;1st Base&lt;/a&gt;&lt;/li&gt;
+							    &lt;li role=&quot;presentation&quot;&gt;&lt;a role=&quot;menuitem&quot; tabindex=&quot;-1&quot; href=&quot;#&quot;&gt;2nd Base&lt;/a&gt;&lt;/li&gt;
+							    &lt;li role=&quot;presentation&quot;&gt;&lt;a role=&quot;menuitem&quot; tabindex=&quot;-1&quot; href=&quot;#&quot;&gt;3rd Base&lt;/a&gt;&lt;/li&gt;
+							    &lt;li role=&quot;presentation&quot;&gt;&lt;a role=&quot;menuitem&quot; tabindex=&quot;-1&quot; href=&quot;#&quot;&gt;Shortstop&lt;/a&gt;&lt;/li&gt;
+							    &lt;li role=&quot;presentation&quot;&gt;&lt;a role=&quot;menuitem&quot; tabindex=&quot;-1&quot; href=&quot;#&quot;&gt;Left Field&lt;/a&gt;&lt;/li&gt;
+							    &lt;li role=&quot;presentation&quot;&gt;&lt;a role=&quot;menuitem&quot; tabindex=&quot;-1&quot; href=&quot;#&quot;&gt;Center Field&lt;/a&gt;&lt;/li&gt;
+							    &lt;li role=&quot;presentation&quot;&gt;&lt;a role=&quot;menuitem&quot; tabindex=&quot;-1&quot; href=&quot;#&quot;&gt;Right Field&lt;/a&gt;&lt;/li&gt;
+							  &lt;/ul&gt;
+							&lt;/div&gt;
+						&lt;/div&gt;
+						&lt;div class=&quot;input-group&quot;&gt;
+							&lt;span class=&quot;input-group-addon&quot; style=&quot;width:105px&quot;&gt;2014 Salary&lt;/span&gt;
+							&lt;input id=&quot;1415-input-field&quot; type=&quot;text&quot; class=&quot;form-control&quot; placeholder=&quot;Enter Salary Here&quot; aria-describedby=&quot;basic-addon1&quot;&gt;
+						&lt;/div&gt;
+						&lt;div class=&quot;input-group&quot;&gt;
+							&lt;span class=&quot;input-group-addon&quot; style=&quot;width:105px&quot;&gt;2015 Salary&lt;/span&gt;
+							&lt;input id=&quot;1516-input-field&quot; type=&quot;text&quot; class=&quot;form-control&quot; placeholder=&quot;Enter Salary Here&quot; aria-describedby=&quot;basic-addon1&quot;&gt;
+						&lt;/div&gt;
+						&lt;div class=&quot;input-group&quot;&gt;
+							&lt;span class=&quot;input-group-addon&quot; style=&quot;width:105px&quot;&gt;2016 Salary&lt;/span&gt;
+							&lt;input id=&quot;1617-input-field&quot; type=&quot;text&quot; class=&quot;form-control&quot; placeholder=&quot;Enter Salary Here&quot; aria-describedby=&quot;basic-addon1&quot;&gt;
+						&lt;/div&gt;
+						&lt;div class=&quot;input-group&quot;&gt;
+							&lt;span class=&quot;input-group-addon&quot; style=&quot;width:105px&quot;&gt;2017 Salary&lt;/span&gt;
+							&lt;input id=&quot;1718-input-field&quot; type=&quot;text&quot; class=&quot;form-control&quot; placeholder=&quot;Enter Salary Here&quot; aria-describedby=&quot;basic-addon1&quot;&gt;
+						&lt;/div&gt;
+						&lt;div class=&quot;input-group&quot;&gt;
+							&lt;span class=&quot;input-group-addon&quot; style=&quot;width:105px&quot;&gt;2018 Salary&lt;/span&gt;
+							&lt;input id=&quot;1819-input-field&quot; type=&quot;text&quot; class=&quot;form-control&quot; placeholder=&quot;Enter Salary Here&quot; aria-describedby=&quot;basic-addon1&quot;&gt;
+						&lt;/div&gt;
+						&lt;div class=&quot;input-group&quot;&gt;
+							&lt;span class=&quot;input-group-addon&quot; style=&quot;width:105px&quot;&gt;2019 Salary&lt;/span&gt;
+							&lt;input id=&quot;1920-input-field&quot; type=&quot;text&quot; class=&quot;form-control&quot; placeholder=&quot;Enter Salary Here&quot; aria-describedby=&quot;basic-addon1&quot;&gt;
+						&lt;/div&gt;
+						&lt;div class=&quot;input-group&quot;&gt;
+							&lt;span class=&quot;input-group-addon&quot; style=&quot;width:105px&quot;&gt;2020 Salary&lt;/span&gt;
+							&lt;input id=&quot;2021-input-field&quot; type=&quot;text&quot; class=&quot;form-control&quot; placeholder=&quot;Enter Salary Here&quot; aria-describedby=&quot;basic-addon1&quot;&gt;
+						&lt;/div&gt;
+						
+						
+						&lt;div class=&quot;btn-group&quot; role=&quot;group&quot; aria-label=&quot;...&quot; style=&quot;margin-top:10px&quot;&gt;
+							&lt;button type=&quot;button&quot; id=&quot;cancel-button&quot; class=&quot;btn btn-default&quot;&gt;Cancel&lt;/button&gt;
+							&lt;button type=&quot;button&quot; id=&quot;new-player-submit&quot; class=&quot;btn btn-default&quot;&gt;Submit&lt;/button&gt;
+						&lt;/div&gt;
+						
+						&lt;div id=&quot;warning-field&quot;&gt;
+						&lt;/div&gt;	
+					&lt;/div&gt;
+					
+					&lt;script type=&quot;text/javascript&quot;&gt;
+						$(&quot;#position-input-field li a&quot;).click(function(){
+
+					      $(&quot;#position-dropdown-button&quot;).text($(this).text());
+					      $(&quot;#position-dropdown-button&quot;).val($(this).text());
+
+					   });
+
+						$(&quot;#new-player-submit&quot;).on(&quot;click&quot;, function(){
+							$(&quot;#warning-field&quot;).empty();
+							if($(&quot;#name-input-field&quot;).val().length == 0 || $(&quot;#position-dropdown-button&quot;).text().length == 0
+								|| $(&quot;#1415-input-field&quot;).val().length == 0 || $(&quot;#1516-input-field&quot;).val().length == 0
+								|| $(&quot;#1617-input-field&quot;).val().length == 0 || $(&quot;#1718-input-field&quot;).val().length == 0
+								|| $(&quot;#1819-input-field&quot;).val().length == 0 || $(&quot;#1920-input-field&quot;).val().length == 0
+								|| $(&quot;#2021-input-field&quot;).val().length == 0){
+								
+								$(&quot;#warning-field&quot;).append(&quot;&lt;div style=margin-top:10px&gt;You cant leave any fields empty. Please enter 0 if they have no salary for the year.&lt;/div&gt;&quot;);
+							}
+							else if (!(
+								isValidNumber($(&quot;#1415-input-field&quot;).val()) &amp;&amp; isValidNumber($(&quot;#1516-input-field&quot;).val())
+								&amp;&amp; isValidNumber($(&quot;#1617-input-field&quot;).val()) &amp;&amp; isValidNumber($(&quot;#1718-input-field&quot;).val())
+								&amp;&amp; isValidNumber($(&quot;#1819-input-field&quot;).val()) &amp;&amp; isValidNumber($(&quot;#1920-input-field&quot;).val())
+								&amp;&amp; isValidNumber($(&quot;#2021-input-field&quot;).val())))
+							{
+								$(&quot;#warning-field&quot;).append(&quot;&lt;div style=margin-top:10px&gt;The fields for yearly salary may only be numbers. Please try again&lt;/div&gt;&quot;);
+							}
+							else {
+								addNewPlayer($(&quot;#name-input-field&quot;).val(), $(&quot;#position-dropdown-button&quot;).text(), $(&quot;#1415-input-field&quot;).val(), $(&quot;#1516-input-field&quot;).val(), $(&quot;#1617-input-field&quot;).val(), $(&quot;#1718-input-field&quot;).val(), $(&quot;#1819-input-field&quot;).val(), $(&quot;#1920-input-field&quot;).val(), $(&quot;#2021-input-field&quot;).val(), &quot;MLB&quot;);
+							}
+						});
+						
+						$(&quot;#cancel-button&quot;).on(&quot;click&quot;, function(){
+							$(&quot;#new-player-button&quot;).popover(&quot;hide&quot;);
+						});
+					&lt;/script&gt;" data-original-title="Add a New Player">New Player</button>
+			
+			<table id="player-table" class="table-striped table-bordered sortable-theme-bootstrap" data-sortable="" data-sortable-initialized="true">
+				<thead>
+					<tr>
+						<th class="pname">Player Name</th>
+						<th class="position" data-sorted="true" data-sorted-direction="descending">Position</th>
+						<th class="salary">'14 Salary</th>
+						<th class="salary">'15 Salary</th>
+						<th class="salary">'16 Salary</th>
+						<th class="salary">'17 Salary</th>
+						<th class="salary">'18 Salary</th>
+						<th class="salary">'19 Salary</th>
+						<th class="salary">'20 Salary</th>
+					</tr>
+				</thead>
+				<tbody id="player-table-body"> 
+				<tr><td data-id="adb5f724ed2e174dcbb971b3174eb7bd"><i id="adb5f724ed2e174dcbb971b3174eb7bd-edit" class="fa fa-lg fa-pencil-square" style="margin-right:5px; color:blue" data-original-title="" title=""></i><i id="adb5f724ed2e174dcbb971b3174eb7bd-delete" class="fa fa-lg fa-times" style="margin-right:15px; color:red"></i><span id="adb5f724ed2e174dcbb971b3174eb7bd-name" data-id="adb5f724ed2e174dcbb971b3174eb7bd">Cole Hamels</span></td><td>
+							    Pitcher
+							  </td><td class="Salary1415"> <div class="pull-right">$25,000,000</div></td><td class="Salary1516"> <div class="pull-right">$25,000,000</div></td><td class="Salary1617"> <div class="pull-right">$25,000,000</div></td><td class="Salary1718"> <div class="pull-right">$25,000,000</div></td><td class="Salary1819"> <div class="pull-right">$25,000,000</div></td><td class="Salary1920 warning" style="background-color: rgb(255, 235, 205);"> <div class="pull-right">$0</div></td><td class="Salary2021 warning" style="background-color: rgb(255, 235, 205);"> <div class="pull-right">$0</div></td></tr></tbody>
+			</table>
+
+			<table id="salary-cap-table" class="table table-striped table-bordered" style="margin-top: 30px; float:right; width: 820px">
+				<thead>
+					<tr>
+						<th class="salary">'14 Payroll</th>
+						<th class="salary">'15 Payroll</th>
+						<th class="salary">'16 Payroll</th>
+						<th class="salary">'17 Payroll</th>
+						<th class="salary">'18 Payroll</th>
+						<th class="salary">'19 Payroll</th>
+						<th class="salary">'20 Payroll</th>
+					</tr>
+				</thead>
+				<tbody id="salary-cap-table-body"> 
+					<tr>
+						<td id="1415Payroll">$25,000,000</td>
+						<td id="1516Payroll">$25,000,000</td>
+						<td id="1617Payroll">$25,000,000</td>
+						<td id="1718Payroll">$25,000,000</td>
+						<td id="1819Payroll">$25,000,000</td>
+						<td id="1920Payroll">$0</td>
+						<td id="2021Payroll">$0</td>
+					</tr> 
+				</tbody>
+			</table>
+
+			<table id="salary-space-table" class="table table-striped table-bordered" style="margin-top: 10px; float: right; width: 820px">
+				<thead>
+					<tr>
+						<th class="salary">'14 Space</th>
+						<th class="salary">'15 Space</th>
+						<th class="salary">'16 Space</th>
+						<th class="salary">'17 Space</th>
+						<th class="salary">'18 Space</th>
+						<th class="salary">'19 Space</th>
+						<th class="salary">'20 Space</th>
+					</tr>
+				</thead>
+				<tbody id="salary-space-table-body">
+					<tr>
+						<td id="1415Space" style="color: rgb(144, 238, 144);">$153,000,000</td>
+						<td id="1516Space" style="color: rgb(144, 238, 144);">$153,000,000</td>
+						<td id="1617Space" style="color: rgb(144, 238, 144);">$153,000,000</td>
+						<td id="1718Space" style="color: rgb(144, 238, 144);">$153,000,000</td>
+						<td id="1819Space" style="color: rgb(144, 238, 144);">$153,000,000</td>
+						<td id="1920Space" style="color: rgb(144, 238, 144);">$178,000,000</td>
+						<td id="2021Space" style="color: rgb(144, 238, 144);">$178,000,000</td>
+					</tr> 
+				</tbody>
+			</table>
+		</div>
+
+	
+</body></html>

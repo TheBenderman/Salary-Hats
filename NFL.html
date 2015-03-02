@@ -1,0 +1,120 @@
+<html>
+	<head>		
+		<link rel="stylesheet" href="bootstrap/bootstrap.min.css">
+		<link rel="stylesheet" href="bootstrap/bootstrap-theme.css">
+		<link rel="stylesheet" href="bootstrap3-dialog-master/src/css/bootstrap-dialog.css">
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="sortable/css/sortable-theme-bootstrap.css"></script>
+		<link rel="stylesheet" href="SalaryHats.css">
+		
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+		<script src="bootstrap/bootstrap.min.js"></script>
+		<script src="http://staticweb.cloudmine.me/cloudmine-0.9.12.min.js"></script>
+		<script src="SalaryHats.js"></script>
+		<script src="bootstrap3-dialog-master/src/js/bootstrap-dialog.js"></script>
+		<script src="sortable/js/sortable.js"></script>
+		
+		<script type=text/javascript>
+			if ( sessionStorage.getItem("ErrorMessage") == "Error"){
+				alert("Oops something went wrong! We've taken you back to the homepage to fix the error.")
+			}
+
+			sessionStorage.setItem("selectedTeam", "");
+			sessionStorage.setItem("ErrorMessage", "");
+
+			$(document).ready(function(){
+				populateTeamTable("NFL");
+				$('#new-team-button').popover();
+
+				$("#help-button").on("click", function(){
+					BootstrapDialog.show({
+						message: 'Welcome to the help for NFL Teams. \n\n Here you can add a new team, edit an existing team, or view the information regarding that team. \n\n By clicking on the name of a team, you will be taken to a team specific page that will show you all of the players on the team. From here, you can add, remove, or edit existing players as you choose. You can also click the pencil button next to a teams name in order to edit that teams name. Finally, you can click the red x if you would like to delete that team. \n\n Click on one of the tables headers if you would like to sort the table by that specific column. \n\n\n A little information about the NFL\'s salary cap:\n The NFL has a hard cap, meaning that they can not go over the cap under any circumstances. The current cap in the NFL is $143 million.',
+						title: 'Help',
+						buttons: [{
+					        id: 'btn-ok',   
+					        icon: 'fa fa-check',       
+					    	label: 'OK',
+					        cssClass: 'btn-primary', 
+					        autospin: false,
+					        action: function(dialogRef){    
+					            dialogRef.close();
+					        }
+					    }]
+					});
+				});
+			});
+			
+			//var ws = new cloudmine.WebService({
+				//appid: "7dbd6010969c4234af24be6f31cee847",
+				//apikey: "26bdff40326740fd9323621d17cad02d" });
+		</script>
+	</head>
+	<body>
+		<nav class="navbar navbar-default navbar-fixed-top">
+			<div class="container">
+				<div class="navbar-header">
+					<a class="navbar-brand">Salary Hats</a>
+				</div>
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-6">
+					<ul class="nav navbar-nav">
+						<li><a href="Home.html">Home</a></li>
+						<li><a href="NHL.html">NHL</a></li>
+						<li><a href="NBA.html">NBA</a></li>
+						<li><a href="MLB.html">MLB</a></li>
+						<li class="active"><a href="NFL.html">NFL</a></li>
+						<li><a href="MLS.html">MLS</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		
+		<div style="margin-top:80px; margin-left:15px">
+			<h1> NFL Salary Calculation <i id="help-button" class="fa fa-question-circle" style="margin-left:20px; color:blue"></i></h1>
+		</div>
+		
+		<div style="margin-top:30px; margin-left:15px; width:1000">
+			<button id="new-team-button" rel="popover" type="button" class="btn btn-default" style="margin-bottom:5px" 
+				data-toggle="popover" data-placement="right" data-html="true" data-content='<div>
+						<div class="input-group">
+							<span class="input-group-addon" id="basic-addon1">Team Name</span>
+							<input id="name-input-field" type="text" class="form-control" placeholder="Enter Name Here" aria-describedby="basic-addon1">
+						</div>
+						
+						<div class="btn-group" role="group" aria-label="..." style="margin-top:10px">
+							<button type="button" id="cancel-button" class="btn btn-default">Cancel</button>
+							<button type="button" id="new-team-submit" class="btn btn-default">Submit</button>
+						</div>
+						
+						<div id="warning-field">
+						</div>	
+					</div>
+					
+					<script type="text/javascript">
+						$("#new-team-submit").on("click", function(){
+							if($("#name-input-field").val().length == 0){
+								$("#warning-field").append("<div style=margin-top:10px>You need to enter something.</div>");
+							}
+							else {
+								addNewTeam($("#name-input-field").val(), "NFL");
+							}
+						});
+						
+						$("#cancel-button").on("click", function(){
+							$("#new-team-button").popover("hide");
+						});
+					</script>' data-original-title="Add a New Team">New Team</button>
+			
+			<table id="team-table" class="table-striped table-bordered sortable-theme-bootstrap" data-sortable>
+				<thead>
+					<tr>
+						<th style="width:300px" data-sorted="true" data-sorted-direction="descending">Team Name</th>
+						<th>2014-2015 Payroll ($)</th>
+						<th>2014-2015 Cap Space ($)</th>
+					</tr>
+				</thead>
+				<tbody id="team-table-body"> 
+				</tbody>
+			</table>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,256 @@
+<html>
+	<head>		
+		<link rel="stylesheet" href="bootstrap/bootstrap.min.css">
+		<link rel="stylesheet" href="bootstrap/bootstrap-theme.css">
+		<link rel="stylesheet" href="bootstrap3-dialog-master/src/css/bootstrap-dialog.css">
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="sortable/css/sortable-theme-bootstrap.css"></script>
+		<link rel="stylesheet" href="SalaryHats.css">
+		
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+		<script src="bootstrap/bootstrap.min.js"></script>
+		<script src="http://staticweb.cloudmine.me/cloudmine-0.9.12.min.js"></script>
+		<script src="SalaryHats.js"></script>
+		<script src="bootstrap3-dialog-master/src/js/bootstrap-dialog.js"></script>
+		<script src="sortable/js/sortable.js"></script>
+
+		<script type=text/javascript>
+			var id = sessionStorage.getItem("selectedTeam");
+			if(id == ""){
+				sessionStorage.setItem("ErrorMessage", "Error");
+				window.location.href = "NFL.html";
+			}
+
+			$(document).ready(function(){
+				$('#new-player-button').popover();
+				displayTeamHeader();
+				populatePlayerTable("NFL");
+
+				$("#help-button").on("click", function(){
+					BootstrapDialog.show({
+						message: 'Welcome to the help for an NFL Team. \n\n Here you can add new players, edit existing players, or delete players. \n\n You can click the pencil button next to a players name in order to edit that players information, such as name, position and salaries for each year. Finally, you can click the red x if you would like to delete that team. \n\n Click on one of the tables headers if you would like to sort the table by that specific column. \n\n\n A little information about the NFL\'s salary cap:\n The NFL has a hard cap, meaning that they can not go over the cap under any circumstances. The current cap in the NFL is $143 million.',
+						title: 'Help',
+						buttons: [{
+					        id: 'btn-ok',   
+					        icon: 'fa fa-check',       
+					    	label: 'OK',
+					        cssClass: 'btn-primary', 
+					        autospin: false,
+					        action: function(dialogRef){    
+					            dialogRef.close();
+					        }
+					    }]
+					});
+				});
+				$("#back-button").on("click", function(){
+					window.location.href = "NFL.html";
+				});
+			});			
+			
+		</script>
+	</head>
+	<body>
+		<nav class="navbar navbar-default navbar-fixed-top">
+			<div class="container">
+				<div class="navbar-header">
+					<a class="navbar-brand">Salary Hats</a>
+				</div>
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-6">
+					<ul class="nav navbar-nav">
+						<li><a href="Home.html">Home</a></li>
+						<li><a href="NHL.html">NHL</a></li>
+						<li><a href="NBA.html">NBA</a></li>
+						<li><a href="MLB.html">MLB</a></li>
+						<li class="active"><a href="NFL.html">NFL</a></li>
+						<li><a href="MLS.html">MLS</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		
+		<div style="margin-top:80px; margin-left:15px">
+			<a href="#" id="back-button"><i class="fa fa-angle-left"></i> Back to Teams </a>
+			<br/><br/>
+			<span id="team-header" style="font-size:30px"> </span> <i id="help-button" class="fa fa-question-circle fa-2x" style="margin-left:20px; color:blue"></i>
+		</div>
+		
+		<div style="margin-top:30px; margin-left:15px; width:1100">
+			<button id="new-player-button" rel="popover" type="button" class="btn btn-default" style="margin-bottom:5px" 
+				data-toggle="popover" data-placement="right" data-html="true" data-content='<div>
+						Please enter the data for the new player here. All input fields must be filled. The salary fields may
+						only be numbers. If there is no salary for a year, enter a 0.
+						<br/>
+						<br/>
+
+						<div class="input-group">
+							<span class="input-group-addon" style="width:105px">Name</span>
+							<input id="name-input-field" type="text" class="form-control" placeholder="Enter Name Here" aria-describedby="basic-addon1">
+						</div>
+						
+						<div class="input-group">
+							<span class="input-group-addon" style="width:105px">Position<span class="caret"></span></span>
+							<div class="dropdown" id="position-input-field">
+							  <button class="btn btn-default dropdown-toggle" type="button" id="position-dropdown-button" data-toggle="dropdown" aria-expanded="true" style="width:139px">
+							    Quarterback
+							  </button>
+							  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+							    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Quarterback</a></li>
+							    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Halfback</a></li>
+							    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Fullback</a></li>
+							    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Wide Receiver</a></li>
+							    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Offensive Lineman</a></li>
+							    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Defensive Lineman</a></li>
+							    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Linebacker</a></li>
+							    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Cornerback</a></li>
+							    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Safety</a></li>
+							    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Punter</a></li>
+							    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Kicker</a></li>
+							  </ul>
+							</div>
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon" style="width:105px">14-15 Salary</span>
+							<input id="1415-input-field" type="text" class="form-control" placeholder="Enter Salary Here" aria-describedby="basic-addon1">
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon" style="width:105px">15-16 Salary</span>
+							<input id="1516-input-field" type="text" class="form-control" placeholder="Enter Salary Here" aria-describedby="basic-addon1">
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon" style="width:105px">16-17 Salary</span>
+							<input id="1617-input-field" type="text" class="form-control" placeholder="Enter Salary Here" aria-describedby="basic-addon1">
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon" style="width:105px">17-18 Salary</span>
+							<input id="1718-input-field" type="text" class="form-control" placeholder="Enter Salary Here" aria-describedby="basic-addon1">
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon" style="width:105px">18-19 Salary</span>
+							<input id="1819-input-field" type="text" class="form-control" placeholder="Enter Salary Here" aria-describedby="basic-addon1">
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon" style="width:105px">19-20 Salary</span>
+							<input id="1920-input-field" type="text" class="form-control" placeholder="Enter Salary Here" aria-describedby="basic-addon1">
+						</div>
+						<div class="input-group">
+							<span class="input-group-addon" style="width:105px">20-21 Salary</span>
+							<input id="2021-input-field" type="text" class="form-control" placeholder="Enter Salary Here" aria-describedby="basic-addon1">
+						</div>
+						
+						
+						<div class="btn-group" role="group" aria-label="..." style="margin-top:10px">
+							<button type="button" id="cancel-button" class="btn btn-default">Cancel</button>
+							<button type="button" id="new-player-submit" class="btn btn-default">Submit</button>
+						</div>
+						
+						<div id="warning-field">
+						</div>	
+					</div>
+					
+					<script type="text/javascript">
+						$("#position-input-field li a").click(function(){
+
+					      $("#position-dropdown-button").text($(this).text());
+					      $("#position-dropdown-button").val($(this).text());
+
+					   });
+
+						$("#new-player-submit").on("click", function(){
+							$("#warning-field").empty();
+							if($("#name-input-field").val().length == 0 || $("#position-dropdown-button").text().length == 0
+								|| $("#1415-input-field").val().length == 0 || $("#1516-input-field").val().length == 0
+								|| $("#1617-input-field").val().length == 0 || $("#1718-input-field").val().length == 0
+								|| $("#1819-input-field").val().length == 0 || $("#1920-input-field").val().length == 0
+								|| $("#2021-input-field").val().length == 0){
+								
+								$("#warning-field").append("<div style=margin-top:10px>You cant leave any fields empty. Please enter 0 if they have no salary for the year.</div>");
+							}
+							else if (!(
+								isValidNumber($("#1415-input-field").val()) && isValidNumber($("#1516-input-field").val())
+								&& isValidNumber($("#1617-input-field").val()) && isValidNumber($("#1718-input-field").val())
+								&& isValidNumber($("#1819-input-field").val()) && isValidNumber($("#1920-input-field").val())
+								&& isValidNumber($("#2021-input-field").val())))
+							{
+								$("#warning-field").append("<div style=margin-top:10px>The fields for yearly salary may only be numbers. Please try again</div>");
+							}
+							else {
+								addNewPlayer($("#name-input-field").val(), $("#position-dropdown-button").text(), $("#1415-input-field").val(), $("#1516-input-field").val(), $("#1617-input-field").val(), $("#1718-input-field").val(), $("#1819-input-field").val(), $("#1920-input-field").val(), $("#2021-input-field").val(), "NFL");
+							}
+						});
+						
+						$("#cancel-button").on("click", function(){
+							$("#new-player-button").popover("hide");
+						});
+					</script>' data-original-title="Add a New Player">New Player</button>
+			
+			<table id="player-table" class="table-striped table-bordered sortable-theme-bootstrap" data-sortable>
+				<thead>
+					<tr>
+						<th class="pname">Player Name</th>
+						<th class="position" data-sorted="true" data-sorted-direction="descending">Position</th>
+						<th class="salary">'14-'15 Salary</th>
+						<th class="salary">'15-'16 Salary</th>
+						<th class="salary">'16-'17 Salary</th>
+						<th class="salary">'17-'18 Salary</th>
+						<th class="salary">'18-'19 Salary</th>
+						<th class="salary">'19-'20 Salary</th>
+						<th class="salary">'20-'21 Salary</th>
+					</tr>
+				</thead>
+				<tbody id="player-table-body"> 
+				</tbody>
+			</table>
+
+			<table id="salary-cap-table" class="table table-striped table-bordered" style="margin-top: 30px; float:right; width: 820px">
+				<thead>
+					<tr>
+						<th class="salary">14-15 Payroll</th>
+						<th class="salary">15-16 Payroll</th>
+						<th class="salary">16-17 Payroll</th>
+						<th class="salary">17-18 Payroll</th>
+						<th class="salary">18-19 Payroll</th>
+						<th class="salary">19-20 Payroll</th>
+						<th class="salary">20-21 Payroll</th>
+					</tr>
+				</thead>
+				<tbody id="salary-cap-table-body"> 
+					<tr>
+						<td id="1415Payroll"></td>
+						<td id="1516Payroll"></td>
+						<td id="1617Payroll"></td>
+						<td id="1718Payroll"></td>
+						<td id="1819Payroll"></td>
+						<td id="1920Payroll"></td>
+						<td id="2021Payroll"></td>
+					</tr> 
+				</tbody>
+			</table>
+
+			<table id="salary-space-table" class="table table-striped table-bordered" style="margin-top: 10px; float: right; width: 820px">
+				<thead>
+					<tr>
+						<th class="salary">14-15 Space</th>
+						<th class="salary">15-16 Space</th>
+						<th class="salary">16-17 Space</th>
+						<th class="salary">17-18 Space</th>
+						<th class="salary">18-19 Space</th>
+						<th class="salary">19-20 Space</th>
+						<th class="salary">20-21 Space</th>
+					</tr>
+				</thead>
+				<tbody id="salary-space-table-body">
+					<tr>
+						<td id="1415Space"></td>
+						<td id="1516Space"></td>
+						<td id="1617Space"></td>
+						<td id="1718Space"></td>
+						<td id="1819Space"></td>
+						<td id="1920Space"></td>
+						<td id="2021Space"></td>
+					</tr> 
+				</tbody>
+			</table>
+		</div>
+
+	</body>
+</html>

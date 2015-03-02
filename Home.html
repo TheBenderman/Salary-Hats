@@ -1,0 +1,90 @@
+<html>
+	<head>		
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+		<link rel="stylesheet" href="bootstrap/bootstrap.css">
+		<link rel="stylesheet" href="bootstrap/bootstrap-theme.css">
+		<script src="bootstrap/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="SalaryHats.css">
+	</head>
+	<body>
+		<nav class="navbar navbar-default navbar-fixed-top">
+			<div class="container">
+				<div class="navbar-header">
+					<a class="navbar-brand">Salary Hats</a>
+				</div>
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-6">
+					<ul class="nav navbar-nav">
+						<li  class="active"><a href="Home.html">Home</a></li>
+						<li><a href="NHL.html">NHL</a></li>
+						<li><a href="NBA.html">NBA</a></li>
+						<li><a href="MLB.html">MLB</a></li>
+						<li><a href="NFL.html">NFL</a></li>
+						<li><a href="MLS.html">MLS</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+
+		<div class="page-header" style="margin-left:15px; margin-top:80px">
+		  <h1>Welcome to Salary Hats. <small>Where you can track the salaries for your favorite sports teams. </small></h1>
+		</div>
+
+		<div id="sport-carousel" class="carousel slide center" data-ride="carousel" style="margin-top:40px; width:600px">
+		  <!-- Indicators -->
+		  <ol class="carousel-indicators">
+		    <li data-target="#sport-carousel" data-slide-to="0" class="active"></li>
+		    <li data-target="#sport-carousel" data-slide-to="1"></li>
+		    <li data-target="#sport-carousel" data-slide-to="2"></li>
+		    <li data-target="#sport-carousel" data-slide-to="3"></li>
+		    <li data-target="#sport-carousel" data-slide-to="4"></li>
+		  </ol>
+
+		  <!-- Wrapper for slides -->
+		  <div class="carousel-inner" role="listbox">
+		    <div class="item active">
+		      <img src="Pictures/nhl.jpg" alt="..." style="width:600px;height:400px">
+		      <div class="carousel-caption">
+		        Track the Salaries for your favorite NHL Team. 
+		      </div>
+		    </div>
+		    <div class="item">
+		      <img src="Pictures/nba.jpg" alt="..." style="width:600px;height:400px">
+		      <div class="carousel-caption">
+		        Track the Salaries for your favorite NBA Team. 
+		      </div>
+		    </div>
+		    <div class="item">
+		      <img src="Pictures/mlb.jpg" alt="..." style="width:600px;height:400px">
+		      <div class="carousel-caption">
+		        Track the Salaries for your favorite MLB Team. 
+		      </div>
+		    </div>
+		    <div class="item">
+		      <img src="Pictures/nfl.jpg" alt="..." style="width:600px;height:400px">
+		      <div class="carousel-caption">
+		        Track the Salaries for your favorite NFL Team. 
+		      </div>
+		    </div>
+		    <div class="item">
+		      <img src="Pictures/mls.jpg" alt="..." style="width:600px;height:400px">
+		      <div class="carousel-caption">
+		        Track the Salaries for your favorite MLS Team. 
+		      </div>
+		    </div>
+		  </div>
+
+		  <!-- Controls -->
+		  <a href="#sport-carousel" class="left carousel-control" data-slide="prev">
+		    <span class="icon-prev fa-stack fa-lg">
+		        <i class="fa fa-angle-left fa-stack-1x"></i>
+		    </span>
+		</a><!-- end left control -->
+		<a href="#sport-carousel" class="right carousel-control" data-slide="next">
+		    <span class="icon-next fa-stack fa-lg">
+		        <i class="fa fa-angle-right fa-stack-1x"></i>
+		    </span>
+		</a>
+		</div>
+	</body>
+</html>

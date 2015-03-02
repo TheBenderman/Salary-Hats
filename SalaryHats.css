@@ -1,0 +1,41 @@
+i {
+	cursor: pointer;
+}
+.carousel-control .control-left,
+.carousel-control .control-right {
+  position: absolute;
+  top: 50%;
+  z-index: 5;
+  display: inline-block;
+}
+.carousel-control .control-left {
+  left: 50%;
+}
+.carousel-control .control-right {
+  right: 50%;
+}
+.carousel-caption {
+	color:white;
+	font-weight:bold;
+	font-size:20px;
+	-webkit-text-stroke-width: 1px;
+	-webkit-text-stroke-color: black;
+}
+.center {
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+    background-color: #b0e0e6;
+}
+th.pname {
+	width: 220px;
+}
+th.position {
+	width: 100px;
+}
+th.salary {
+	width: 110px;
+}
+td {
+	height: 40px;
+}
